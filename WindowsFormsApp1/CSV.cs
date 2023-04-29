@@ -1,22 +1,19 @@
 ﻿using System;
+using System.Collections;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
 
 namespace WindowsFormsApp1
 {
-    public partial class CSV : Form
+    public partial class Mainform : Form
     {
         string fullpath = @"C:\";
 
-        public CSV()
+        public Mainform()
         {
             InitializeComponent();
-        }
-
-        private void Form1_Load(object sender, EventArgs e)
-        {
-
         }
 
         /// <summary>
@@ -54,18 +51,39 @@ namespace WindowsFormsApp1
             {
                 fullpath = ofd.FileName;
 
+                //絶対パス
+                label4.Text = fullpath;
+
+                //ファイル名
                 string path = Path.GetFileName(ofd.FileName);
 
                 //OKボタンがクリックされたとき、選択されたファイル名を表示する
                 textBox1.Text = path;
+
+                csv_button.Enabled = true;
+            }
+            else
+            {
+                csv_button.Enabled = false; ;
             }
         }
 
-        private void csvbutton(object sender, EventArgs e)
+        private void csv_button_Click(object sender, EventArgs e)
         {
             StreamReader sr = new StreamReader(fullpath, System.Text.Encoding.UTF8);
 
-            CsvToArrayList2(sr.ReadToEnd());
+            string txt = "";
+
+            foreach(ArrayList innerArr in CsvToArrayList2(sr.ReadToEnd()))
+            {
+                foreach(object element in innerArr)
+                {
+                    txt = txt + element.ToString() +" ";
+                }
+                txt = txt + "\r\n";
+            }
+
+            textBox2.Text = txt;
         }
 
         /// <summary>
